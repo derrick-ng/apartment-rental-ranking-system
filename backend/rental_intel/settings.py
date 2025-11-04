@@ -46,9 +46,10 @@ INSTALLED_APPS = [
     #third party packages/modules
     'rest_framework',
     'corsheaders',
+    'django_filters',
 
     #my apps
-    'listings'
+    'listings',
 ]
 
 MIDDLEWARE = [
