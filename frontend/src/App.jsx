@@ -1,4 +1,3 @@
-import "./App.css";
 import ListingTable from "./components/ListingTable";
 
 function App() {
