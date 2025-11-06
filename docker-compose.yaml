@@ -13,5 +13,28 @@ services:
     env_file:
       - ./backend/.env
 
+  redis:
+    image: redis:7-alpine
+    container_name: "rental-redis"
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+  celery-worker:
+    build: ./backend
+    command: celery -A rental_intel worker
+    depends_on:
+      - redis
+      - db
+
+  celery-beat:
+    build: ./backend
+    command: celery -A rental_intel beat --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    depends_on:
+      - redis
+      - db
+
 volumes:
   postgres-data:
+  redis-data:
