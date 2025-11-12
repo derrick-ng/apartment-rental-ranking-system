@@ -96,6 +96,4 @@ def scrape_listing_details(url):
     if amenities_list:
         details['extra_amenities'] = ', '.join(amenities_list)    
 
-    print(f'listing details: {details}')
-
-    # return details
+    return details
