@@ -32,21 +32,28 @@ def scrape_listing_details(url):
     attrgroups = soup.find_all('div', class_='attrgroup')
     bed_bath_sqft = attrgroups[0].find_all('span', class_='attr important')
     bed_bath = bed_bath_sqft[0].get_text().split('/')
-    details['bedrooms'] = bed_bath[0].strip()[0]
-    details['bathrooms'] = bed_bath[1].strip()[0]
+    details['bedrooms'] = int(bed_bath[0].strip()[0])
+    bathrooms = bed_bath[1].strip()
+    if 'shared' in bathrooms:
+        details['bathrooms'] = 1
+    else:
+        details['bathrooms'] = float(bathrooms[0])
+
     
     if len(bed_bath_sqft) > 1:
         sqft = bed_bath_sqft[1].get_text(strip=True)
         sqft_match = re.search(r'(\d+)ft', sqft, re.IGNORECASE)
 
         if sqft_match:
-            details['sqft'] = sqft.split('ft')[0]
+            details['sqft'] = int(sqft.split('ft')[0])
 
     #check for address
-    details['address'] = soup.find('h2', class_='street-address').get_text(strip=True)
+    address = soup.find('h2', class_='street-address')
+    if address:
+        details['address'] = address.get_text(strip=True)
 
     #check for cats and dogs
-    extra_amenities = attrgroups[2]
+    extra_amenities = attrgroups[-1]
     cat_check = extra_amenities.find('div', class_='pets_cat')
     if cat_check:
         details['cats_allowed'] = True 
