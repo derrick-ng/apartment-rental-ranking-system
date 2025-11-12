@@ -28,6 +28,7 @@ def scrape_listing_details(url):
         'extra_amenities': None,
     }
 
+    #check for BR/BA
     attrgroups = soup.find_all('div', class_='attrgroup')
     bed_bath_sqft = attrgroups[0].find_all('span', class_='attr important')
     bed_bath = bed_bath_sqft[0].get_text().split('/')
@@ -41,9 +42,10 @@ def scrape_listing_details(url):
         if sqft_match:
             details['sqft'] = sqft.split('ft')[0]
 
+    #check for address
     details['address'] = soup.find('h2', class_='street-address').get_text(strip=True)
 
-    #check which pets are allowed
+    #check for cats and dogs
     extra_amenities = attrgroups[2]
     cat_check = extra_amenities.find('div', class_='pets_cat')
     if cat_check:
@@ -93,6 +95,7 @@ def scrape_listing_details(url):
 
         amenities_list.append(text)
 
+    #add untracked, misc amenities
     if amenities_list:
         details['extra_amenities'] = ', '.join(amenities_list)    
 
