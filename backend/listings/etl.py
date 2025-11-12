@@ -16,6 +16,13 @@ def clean_listings_data(listings_data):
 
     df['data_quality'] = df.apply(calculate_quality_score, axis=1)
 
+    df = df.replace({pd.NA: None, float('nan'): None})
+
+    numeric_cols = ['bedrooms', 'bathrooms', 'sqft']
+    for col in numeric_cols:
+        if col in df.columns:
+            df[col] = df[col].where(pd.notna(df[col]), None)
+
     return df.to_dict('records')
 
 def standardize_location(location):

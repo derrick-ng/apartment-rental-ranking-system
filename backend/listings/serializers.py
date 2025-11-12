@@ -12,8 +12,18 @@ class ListingSerializer(serializers.ModelSerializer):
             'title',
             'price',
             'location',
+            'bedrooms',
+            'bathrooms',
+            'sqft',
+            'address',
+            'cats_allowed',
+            'dogs_allowed',
+            'laundry_type',
+            'parking',
+            'extra_amenities',
             'scraped_at',
             'active',
+            'data_quality',
         ]
         read_only_fields = [
             'id',
