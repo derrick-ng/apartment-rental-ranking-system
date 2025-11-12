@@ -1,5 +1,4 @@
-import requests
-import time, random
+import time, random, requests, logging
 from bs4 import BeautifulSoup
 from listings.detail_scraper import scrape_listing_details
 
@@ -11,11 +10,11 @@ def scrape_list_urls():
     }
 
     response = requests.get(url, headers=headers)
-    print(f"Status Code: {response.status_code}")
+    logging.info(f"Status Code: {response.status_code}")
 
     soup = BeautifulSoup(response.content, 'lxml')
     listings = soup.find_all('li', class_='cl-static-search-result')
-    print(f"Found {len(listings)} Listings")
+    logging.info(f"Found {len(listings)} Listings")
 
     for index, listing in enumerate(listings):
         link = listing.find('a')
@@ -46,7 +45,7 @@ def scrape_list_urls():
         }
 
         if url:
-            print(f"[{index+1}/{len(listings)}] url:{url}")
+            logging.info(f"[{index+1}/{len(listings)}] url:{url}")
             details = scrape_listing_details(url)
             data.update(details)
             time.sleep(random.uniform(0, 1.5))
