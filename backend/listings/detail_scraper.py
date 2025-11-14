@@ -34,12 +34,13 @@ def scrape_listing_details(url):
     bed_bath = bed_bath_sqft[0].get_text().split('/')
     details['bedrooms'] = int(bed_bath[0].strip()[0])
     bathrooms = bed_bath[1].strip()
-    if 'shared' in bathrooms:
-        details['bathrooms'] = 1
-    else:
-        details['bathrooms'] = float(bathrooms[0])
+    bathroom_match = re.search(r'(\d+(?:\.\d+)?)', bathrooms)
 
-    
+    if bathroom_match:
+        details['bathrooms'] = float(bathroom_match.group(1))
+    else:
+        details['bathrooms'] = 1
+
     if len(bed_bath_sqft) > 1:
         sqft = bed_bath_sqft[1].get_text(strip=True)
         sqft_match = re.search(r'(\d+)ft', sqft, re.IGNORECASE)
