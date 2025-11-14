@@ -12,7 +12,17 @@ def scrape_listing_details(url):
         response.raise_for_status()
     except Exception as e:
         print(f"Error fetching {url}: {e}")
-        return {}
+        return {
+            'bedrooms': None,
+            'bathrooms': None,
+            'sqft': None,
+            'address': None,
+            'cats_allowed': None,
+            'dogs_allowed': None,
+            'laundry_type': None,
+            'parking': None,
+            'extra_amenities': None,
+        }
     
     soup = BeautifulSoup(response.content, 'lxml')
 

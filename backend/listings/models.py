@@ -18,8 +18,8 @@ class Listing(models.Model):
     address = models.CharField(max_length=255, null=True, blank=True)
 
     #amenities
-    cats_allowed = models.BooleanField(default=False)
-    dogs_allowed = models.BooleanField(default=False)
+    cats_allowed = models.BooleanField(null=True, default=False)
+    dogs_allowed = models.BooleanField(null=True, default=False)
     laundry_type = models.CharField(
         max_length=50,
         choices=[
