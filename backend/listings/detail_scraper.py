@@ -7,36 +7,31 @@ def scrape_listing_details(url):
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
     }
 
-    try:
-        response = requests.get(url, headers=headers, timeout=10)
-        response.raise_for_status()
-    except Exception as e:
-        print(f"Error fetching {url}: {e}")
-        return {
-            'bedrooms': None,
-            'bathrooms': None,
-            'sqft': None,
-            'address': None,
-            'cats_allowed': None,
-            'dogs_allowed': None,
-            'laundry_type': None,
-            'parking': None,
-            'extra_amenities': None,
-        }
-    
-    soup = BeautifulSoup(response.content, 'lxml')
-
     details = {
         'bedrooms': None,
         'bathrooms': None,
         'sqft': None,
         'address': None,
-        'cats_allowed': False,
-        'dogs_allowed': False,
+        'cats_allowed': None,
+        'dogs_allowed': None,
         'laundry_type': None,
         'parking': None,
         'extra_amenities': None,
     }
+
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+        response.raise_for_status()
+    except Exception as e:
+        print(f"Error fetching {url}: {e}")
+        return details
+    
+    soup = BeautifulSoup(response.content, 'lxml')
+
+    removed = soup.find('div', id='has_been_removed')
+    if removed:
+        print(f"Listing has been flagged/removed")
+        return
 
     #check for BR/BA
     attrgroups = soup.find_all('div', class_='attrgroup')
@@ -67,11 +62,15 @@ def scrape_listing_details(url):
     extra_amenities = attrgroups[-1]
     cat_check = extra_amenities.find('div', class_='pets_cat')
     if cat_check:
-        details['cats_allowed'] = True 
+        details['cats_allowed'] = True
+    else:
+        details['cats_allowed'] = False
 
     dog_check = extra_amenities.find('div', class_='pets_dog')
     if dog_check:
         details['dogs_allowed'] = True
+    else:
+        details['dogs_allowed'] = False
 
     #check for laundry and parking
     amenities_list = []

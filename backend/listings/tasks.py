@@ -22,6 +22,7 @@ def scrape_listings_task():
 
         if duplicate_exists:
             skipped_count += 1
+            continue
 
         listing, created = Listing.objects.get_or_create(
             craigslist_id=data['craigslist_id'],

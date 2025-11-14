@@ -4,6 +4,8 @@ from listings.detail_scraper import scrape_listing_details
 
 def scrape_list_urls():
     all_listings = []
+    removed_count = 0
+
     url = f"https://sfbay.craigslist.org/search/sfc/apa#search=2~gallery~0"
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
@@ -47,6 +49,13 @@ def scrape_list_urls():
         if url:
             logging.info(f"[{index+1}/{len(listings)}] url:{url}")
             details = scrape_listing_details(url)
+
+            if not details or all(v is None or v is False for v in details.values()):
+                logging.warning(f"Listing removed/flagged")
+                removed_count += 1
+                time.sleep(random.uniform(0, 1.5))
+                continue
+            
             data.update(details)
             time.sleep(random.uniform(0, 1.5))
 
