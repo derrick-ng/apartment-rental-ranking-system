@@ -13,7 +13,13 @@ class ListingViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_fields = {
         'price': ['gte', 'lte'],
         'location': ['icontains'],
+        'bedrooms': ['exact', 'gte', 'lte'],
+        'bathrooms': ['exact', 'gte', 'lte'],
+        'cats_allowed': ['exact'],
+        'dogs_allowed': ['exact'],
+        'laundry_type': ['exact'],
+        'parking': ['exact'],
     }
     
-    ordering_fields = ['price', 'scraped_at']
+    ordering_fields = ['price', 'scraped_at', 'bedrooms', 'bathrooms']
     ordering = ['-scraped_at']

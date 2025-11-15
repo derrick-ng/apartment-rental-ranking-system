@@ -12,14 +12,20 @@ function ListingTable() {
   const [location, setLocation] = useState("");
   const [sortBy, setSortBy] = useState("-scraped_at");
 
-  const activeFilters = [minPrice, maxPrice, location].filter(Boolean).length;
+  const [bedrooms, setBedrooms] = useState("");
+  const [bathrooms, setBathrooms] = useState("");
+  const [petsAllowed, setPetsAllowed] = useState("any");
+  const [laundryType, setLaundryType] = useState("");
+  const [parkingType, setParkingType] = useState("");
+
+  const activeFilters = [minPrice, maxPrice, location, bedrooms, bathrooms, petsAllowed !== "any", laundryType, parkingType].filter(Boolean).length;
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       fetchListings();
     }, 400);
     return () => clearTimeout(timeoutId);
-  }, [minPrice, maxPrice, location, sortBy]);
+  }, [minPrice, maxPrice, location, sortBy, bedrooms, bathrooms, petsAllowed, laundryType, parkingType]);
 
   const fetchListings = async () => {
     setError(null);
@@ -30,6 +36,18 @@ function ListingTable() {
       if (maxPrice) params.price__lte = maxPrice;
       if (location) params.location__icontains = location;
       if (sortBy) params.ordering = sortBy;
+
+      if (bedrooms) params.bedrooms__gte = bedrooms;
+      if (bathrooms) params.bathrooms__gte = bathrooms;
+      if (petsAllowed === "cats") params.cats_allowed = true;
+      if (petsAllowed === "dogs") params.dogs_allowed = true;
+      if (petsAllowed === "both") {
+        params.cats_allowed = true;
+        params.dogs_allowed = true;
+      }
+      if (laundryType) params.laundry_type = laundryType;
+      if (parkingType) params.parking = parkingType;
+
       const response = await api.get("/listings/", { params });
       setListings(response.data);
     } catch (err) {
@@ -43,6 +61,12 @@ function ListingTable() {
     setMaxPrice("");
     setLocation("");
     setSortBy("-scraped_at");
+
+    setBedrooms("");
+    setBathrooms("");
+    setPetsAllowed("any");
+    setLaundryType("");
+    setParkingType("");
   };
 
   const toggleExpand = (id) => {
@@ -69,7 +93,7 @@ function ListingTable() {
         <h1 className="text-3xl font-bold text-gray-900 mb-8">SF Bay Area Rental Listings</h1>
 
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Min Price</label>
               <input
@@ -114,6 +138,80 @@ function ListingTable() {
                 <option value="scraped_at">Oldest First</option>
                 <option value="price">Price: Low to High</option>
                 <option value="-price">Price: High to Low</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Min Bedrooms</label>
+              <select
+                value={bedrooms}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onChange={(e) => setBedrooms(e.target.value)}
+              >
+                <option value="">Any</option>
+                <option value="1">1+</option>
+                <option value="2">2+</option>
+                <option value="3">3+</option>
+                <option value="4">4+</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Min Bathrooms</label>
+              <select
+                value={bathrooms}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onChange={(e) => setBathrooms(e.target.value)}
+              >
+                <option value="">Any</option>
+                <option value="1">1+</option>
+                <option value="1.5">1.5+</option>
+                <option value="2">2+</option>
+                <option value="2.5">2.5+</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Pets</label>
+              <select
+                value={petsAllowed}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onChange={(e) => setPetsAllowed(e.target.value)}
+              >
+                <option value="any">Any</option>
+                <option value="cats">Cats OK</option>
+                <option value="dogs">Dogs OK</option>
+                <option value="both">Both</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Laundry</label>
+              <select
+                value={laundryType}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onChange={(e) => setLaundryType(e.target.value)}
+              >
+                <option value="">Any</option>
+                <option value="in_unit">In Unit</option>
+                <option value="on_site">On Site</option>
+                <option value="none">None</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Parking</label>
+              <select
+                value={parkingType}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onChange={(e) => setParkingType(e.target.value)}
+              >
+                <option value="">Any</option>
+                <option value="garage">Garage</option>
+                <option value="off_street">Off Street</option>
+                <option value="carport">Carport</option>
+                <option value="street">Street</option>
+                <option value="none">None</option>
               </select>
             </div>
           </div>
