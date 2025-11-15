@@ -1,3 +1,4 @@
+// Updated ListingTable with expanded details functionality (comments removed)
 import { useState, useEffect } from "react";
 import api from "../api/client";
 
@@ -5,6 +6,7 @@ function ListingTable() {
   const [listings, setListings] = useState([]);
   const [initialLoading, setInitialLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [expandedId, setExpandedId] = useState(null);
 
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
@@ -17,22 +19,18 @@ function ListingTable() {
     const timeoutId = setTimeout(() => {
       fetchListings();
     }, 400);
-
     return () => clearTimeout(timeoutId);
   }, [minPrice, maxPrice, location, sortBy]);
 
   const fetchListings = async () => {
     setError(null);
     setInitialLoading(false);
-
     try {
       const params = {};
-
       if (minPrice) params.price__gte = minPrice;
       if (maxPrice) params.price__lte = maxPrice;
       if (location) params.location__icontains = location;
       if (sortBy) params.ordering = sortBy;
-
       const response = await api.get("/listings/", { params });
       setListings(response.data);
     } catch (err) {
@@ -46,6 +44,10 @@ function ListingTable() {
     setMaxPrice("");
     setLocation("");
     setSortBy("-scraped_at");
+  };
+
+  const toggleExpand = (id) => {
+    setExpandedId(expandedId === id ? null : id);
   };
 
   if (initialLoading)
@@ -76,9 +78,7 @@ function ListingTable() {
                 placeholder="e.g. 2000"
                 value={minPrice}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                onChange={(e) => {
-                  setMinPrice(e.target.value);
-                }}
+                onChange={(e) => setMinPrice(e.target.value)}
               />
             </div>
 
@@ -89,9 +89,7 @@ function ListingTable() {
                 placeholder="e.g. 3000"
                 value={maxPrice}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                onChange={(e) => {
-                  setMaxPrice(e.target.value);
-                }}
+                onChange={(e) => setMaxPrice(e.target.value)}
               />
             </div>
 
@@ -102,9 +100,7 @@ function ListingTable() {
                 placeholder="Mission"
                 value={location}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                onChange={(e) => {
-                  setLocation(e.target.value);
-                }}
+                onChange={(e) => setLocation(e.target.value)}
               />
             </div>
 
@@ -113,9 +109,7 @@ function ListingTable() {
               <select
                 value={sortBy}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                onChange={(e) => {
-                  setSortBy(e.target.value);
-                }}
+                onChange={(e) => setSortBy(e.target.value)}
               >
                 <option value="-scraped_at">Newest First</option>
                 <option value="scraped_at">Oldest First</option>
@@ -148,21 +142,91 @@ function ListingTable() {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Link</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {listings.map((listing) => (
-                  <tr key={listing.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 text-sm text-gray-900">{listing.title}</td>
-                    <td className="px-6 py-4 text-sm text-gray-900 font-medium">${listing.price?.toLocaleString()}</td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{listing.location}</td>
-                    <td className="px-6 py-4 text-sm">
-                      <a href={listing.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 font-medium">
-                        View →
-                      </a>
-                    </td>
-                  </tr>
+                  <>
+                    <tr key={listing.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4 text-sm text-gray-900">{listing.title}</td>
+                      <td className="px-6 py-4 text-sm text-gray-900 font-medium">${listing.price?.toLocaleString()}</td>
+                      <td className="px-6 py-4 text-sm text-gray-500">{listing.location}</td>
+                      <td className="px-6 py-4 text-sm text-gray-700">
+                        {listing.bedrooms ? (
+                          <div className="flex items-center gap-2">
+                            <span>
+                              {listing.bedrooms}BR / {listing.bathrooms}BA
+                              {listing.sqft && ` • ${listing.sqft}sqft`}
+                            </span>
+                            <button
+                              onClick={() => toggleExpand(listing.id)}
+                              className="text-blue-600 hover:text-blue-800 font-bold text-lg leading-none"
+                            >
+                              {expandedId === listing.id ? "▼" : "▶"}
+                            </button>
+                          </div>
+                        ) : (
+                          <span className="text-gray-400 text-xs">No details</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 text-sm">
+                        <a href={listing.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 font-medium">
+                          View →
+                        </a>
+                      </td>
+                    </tr>
+
+                    {expandedId === listing.id && (
+                      <tr key={`${listing.id}-details`}>
+                        <td colSpan="5" className="px-6 py-4 bg-gray-50 border-t border-gray-100">
+                          <div className="space-y-3">
+                            {listing.address && (
+                              <div className="text-sm">
+                                <span className="font-semibold text-gray-700">Address:</span>
+                                <span className="text-gray-600"> {listing.address}</span>
+                              </div>
+                            )}
+
+                            <div className="flex flex-wrap gap-6 text-sm">
+                              <div>
+                                <span className="font-semibold text-gray-700">Pets Allowed:</span>
+                                {listing.cats_allowed && listing.dogs_allowed && <span className="ml-2">Cats & Dogs</span>}
+                                {listing.cats_allowed && !listing.dogs_allowed && <span className="ml-2">Cats</span>}
+                                {!listing.cats_allowed && listing.dogs_allowed && <span className="ml-2">Dogs</span>}
+                                {!listing.cats_allowed && !listing.dogs_allowed && <span className="ml-2">None</span>}
+                              </div>
+                              {listing.laundry_type && (
+                                <div>
+                                  <span className="font-semibold text-gray-700">Laundry:</span>
+                                  <span className="text-gray-600 capitalize"> {listing.laundry_type.replace("_", " ")}</span>
+                                </div>
+                              )}
+
+                              {listing.parking && (
+                                <div>
+                                  <span className="font-semibold text-gray-700">Parking:</span>
+                                  <span className="text-gray-600 capitalize"> {listing.parking.replace("_", " ")}</span>
+                                </div>
+                              )}
+                            </div>
+
+                            {listing.extra_amenities && (
+                              <div className="text-sm">
+                                <span className="font-semibold text-gray-700">Amenities:</span>
+                                <span className="text-gray-600"> {listing.extra_amenities}</span>
+                              </div>
+                            )}
+
+                            {listing.data_quality && (
+                              <div className="text-xs text-gray-500 pt-2 border-t border-gray-200">Data Quality Score: {listing.data_quality}</div>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </>
                 ))}
               </tbody>
             </table>
