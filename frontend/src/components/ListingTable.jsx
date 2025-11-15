@@ -251,7 +251,7 @@ function ListingTable() {
                       <td className="px-6 py-4 text-sm text-gray-900 font-medium">${listing.price?.toLocaleString()}</td>
                       <td className="px-6 py-4 text-sm text-gray-500">{listing.location}</td>
                       <td className="px-6 py-4 text-sm text-gray-700">
-                        {listing.bedrooms ? (
+                        {listing.bedrooms !== null ? (
                           <div className="flex items-center gap-2">
                             <span>
                               {listing.bedrooms}BR / {listing.bathrooms}BA
