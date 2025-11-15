@@ -252,14 +252,14 @@ function ListingTable() {
                       <td className="px-6 py-4 text-sm text-gray-500">{listing.location}</td>
                       <td className="px-6 py-4 text-sm text-gray-700">
                         {listing.bedrooms !== null ? (
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center justify-between gap-2">
                             <span>
                               {listing.bedrooms}BR / {listing.bathrooms}BA
                               {listing.sqft && ` • ${listing.sqft}sqft`}
                             </span>
                             <button
                               onClick={() => toggleExpand(listing.id)}
-                              className="text-blue-600 hover:text-blue-800 font-bold text-lg leading-none"
+                              className="text-blue-600 hover:text-blue-800 font-bold text-lg leading-none shrink-0"
                             >
                               {expandedId === listing.id ? "▼" : "▶"}
                             </button>
