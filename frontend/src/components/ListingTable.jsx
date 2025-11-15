@@ -1,4 +1,3 @@
-// Updated ListingTable with expanded details functionality (comments removed)
 import { useState, useEffect } from "react";
 import api from "../api/client";
 

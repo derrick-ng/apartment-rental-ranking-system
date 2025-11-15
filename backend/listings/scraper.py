@@ -30,7 +30,6 @@ def scrape_list_urls():
         price_div = listing.find('div', class_='price')
         price_text = price_div.text.strip() if price_div else None
 
-        #remove commas and $ in price to cast to int
         price = None
         if price_text:
             price = int(price_text.replace('$', '').replace(',', ''))
