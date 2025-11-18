@@ -1,9 +1,30 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ListingTable from "./components/ListingTable";
 import Analytics from "./components/Analytics";
 
 function App() {
   const [currentView, setCurrentView] = useState("listings");
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 200) {
+        setShowScrollTop(true);
+      } else {
+        setShowScrollTop(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
   return (
     <div>
@@ -35,6 +56,27 @@ function App() {
       </nav>
 
       {currentView === "listings" ? <ListingTable /> : <Analytics />}
+
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="
+            fixed bottom-6 right-6
+            h-12 w-12
+            flex items-center justify-center
+            p-3 rounded-full
+          text-white text-xl
+          bg-black/20 hover:bg-black/40
+            shadow-lg
+            opacity-40 hover:opacity-70
+            transition
+            focus:outline-none
+            "
+          aria-label="Scroll to top"
+        >
+          ↑
+        </button>
+      )}
     </div>
   );
 }
