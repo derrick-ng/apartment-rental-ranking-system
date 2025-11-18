@@ -120,7 +120,7 @@ function ListingTable() {
               <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
               <input
                 type="text"
-                placeholder="Mission"
+                placeholder="e.g. Mission"
                 value={location}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 onChange={(e) => setLocation(e.target.value)}
