@@ -11,8 +11,6 @@ TOMTOM_API_KEY = os.getenv('TOMTOM_API_KEY')
 
 def geocode_address(address):
     if not address or not TOMTOM_API_KEY:
-        print(address)
-        print(TOMTOM_API_KEY)
         return None
     
     url = f'https://api.tomtom.com/search/2/geocode/{address}.json?key={TOMTOM_API_KEY}'
