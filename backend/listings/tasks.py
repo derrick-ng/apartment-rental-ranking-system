@@ -1,7 +1,9 @@
 from celery import shared_task
+from time import sleep
 from .scraper import scrape_list_urls
 from .models import Listing
 from .etl import clean_listings_data
+from .geocoding import geocode_address
 
 @shared_task
 def scrape_listings_task():
@@ -31,6 +33,15 @@ def scrape_listings_task():
         
         if created:
             created_count += 1
+
+            if listing.address and not listing.latitude:
+                coords = geocode_address(listing.address)
+
+                if coords:
+                    listing.latitude = coords['lat']
+                    listing.longitude = coords['lon']
+                    listing.save()
+                sleep(.2)
         else:
             for key, value in data.items():
                 setattr(listing, key, value)
