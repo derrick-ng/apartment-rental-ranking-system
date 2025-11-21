@@ -55,21 +55,46 @@ def calculate_quality_score(row):
     if pd.notna(row['location']): score += 10
     if pd.notna(row['url']): score += 10
 
-    #details are good
+    if pd.notna(row.get('bedrooms')): score += 6
+    if pd.notna(row.get('bathrooms')): score += 6
+    if pd.notna(row.get('sqft')): score += 6
+    if pd.notna(row.get('address')): score += 6
+    if pd.notna(row.get('laundry_type')): score += 3
+    if pd.notna(row.get('parking')): score += 3
+
+    if pd.notna(row.get('latitude')) and pd.notna(row.get('longitude')):
+        score += 10
+
+    #title details are good
     if any(keyword in str(row['title']).lower() for keyword in ['studio', 'bedroom', 'apt', 'apartment', 'house', 'condo']):
         score += 5
 
-    #clickbait is bad
+    #title clickbait is bad, possible scam
     if any(bad in str(row['title']).lower() for bad in ['cheap', 'deal', 'urgent', 'click']):
         score -= 10
 
     #reward "normal" prices
     price = row['price']
-    if 1000 <= price <= 5000:
-        score += 30
-    elif 1 <= price < 1000:
-        score -= 30
-    elif 5000 < price <= 10000:
-        score -= 15
+    if 1000 <= price <= 8000:
+        score += 10
+    #extremely suspicious prices
+    elif price < 500:
+        score -= 20
+    elif price > 10000:
+        score -= 10
+    #slightly suspicious prices
+    elif 500 <= price < 1000:
+        score -= 5
+    elif 8000 <= price <= 10000:
+        score -= 5
 
-    return score
+    bedrooms = row.get('bedrooms')
+    if pd.notna(bedrooms) and bedrooms > 0:
+        price_per_br = price / bedrooms
+
+        if 1000 <= price_per_br <= 3500:
+            score += 5
+        elif price_per_br <= 750 or price_per_br >= 4000:
+            score -= 10
+
+    return max(0, min(100, score))
