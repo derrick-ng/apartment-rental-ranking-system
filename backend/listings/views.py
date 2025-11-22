@@ -7,10 +7,12 @@ from .serializers import ListingSerializer
 from .analytics import (
     get_neighborhood_stats,
     get_price_distribution,
-    get_good_deals,
     get_overall_stats
 )
-
+from .algorithms import (
+    get_good_deals,
+    get_best_price_per_sqft
+    )
 # gets data from database, converts to JSON format
 class ListingViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Listing.objects.filter(active=True).order_by('-scraped_at')
@@ -39,4 +41,5 @@ class ListingViewSet(viewsets.ReadOnlyModelViewSet):
             'neighborhoods': get_neighborhood_stats(),
             'price_distribution': get_price_distribution(),
             'good_deals': get_good_deals(),
+            'best_price_per_sqft': get_best_price_per_sqft(),
         })

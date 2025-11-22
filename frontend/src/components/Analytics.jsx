@@ -37,9 +37,7 @@ export default function Analytics() {
   if (error || !data) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-red-600">
-          {error ? `Error: ${error}` : "No analytics data available."}
-        </div>
+        <div className="text-red-600">{error ? `Error: ${error}` : "No analytics data available."}</div>
       </div>
     );
   }
@@ -55,76 +53,20 @@ export default function Analytics() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow-sm p-6">
             <div className="text-sm font-medium text-gray-500 uppercase">Total Listings</div>
-            <div className="text-3xl font-bold text-gray-900 mt-2">
-              {data.overall.total_listings}
-            </div>
+            <div className="text-3xl font-bold text-gray-900 mt-2">{data.overall.total_listings}</div>
           </div>
           <div className="bg-white rounded-lg shadow-sm p-6">
             <div className="text-sm font-medium text-gray-500 uppercase">Avg Price</div>
-            <div className="text-3xl font-bold text-gray-900 mt-2">
-              ${data.overall.avg_price.toLocaleString()}
-            </div>
+            <div className="text-3xl font-bold text-gray-900 mt-2">${data.overall.avg_price.toLocaleString()}</div>
           </div>
           <div className="bg-white rounded-lg shadow-sm p-6">
             <div className="text-sm font-medium text-gray-500 uppercase">Neighborhoods</div>
-            <div className="text-3xl font-bold text-gray-900 mt-2">
-              {data.overall.locations_count}
-            </div>
+            <div className="text-3xl font-bold text-gray-900 mt-2">{data.overall.locations_count}</div>
           </div>
           <div className="bg-white rounded-lg shadow-sm p-6">
             <div className="text-sm font-medium text-gray-500 uppercase">With Full Amenities</div>
-            <div className="text-3xl font-bold text-gray-900 mt-2">
-              {data.overall.with_details}
-            </div>
+            <div className="text-3xl font-bold text-gray-900 mt-2">{data.overall.with_details}</div>
           </div>
-        </div>
-
-        {/* Good Deals */}
-        <div className="bg-white rounded-lg shadow-sm mb-6">
-          <button
-            type="button"
-            onClick={() => setShowDeals((prev) => !prev)}
-            className="w-full flex items-center justify-between px-6 py-4 text-left"
-          >
-            <span className="text-xl font-bold text-gray-900">Best Deals (Below Market)</span>
-            <span className="text-gray-500 text-sm">{showDeals ? "Hide" : "Show"}</span>
-          </button>
-
-          {showDeals && (
-            <div className="border-t border-gray-200 p-6">
-              {data.good_deals.length === 0 ? (
-                <p className="text-gray-500">
-                  No deals found yet. Check back after more data is collected!
-                </p>
-              ) : (
-                <div className="space-y-3">
-                  {data.good_deals.slice(0, 10).map((deal) => (
-                    <a key={deal.id} href={deal.url} target="_blank" rel="noreferrer">
-                      <div className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <div className="font-medium text-gray-900">{deal.title}</div>
-                            <div className="text-sm text-gray-500">{deal.location}</div>
-                          </div>
-                          <div className="text-right">
-                            <div className="text-lg font-bold text-green-600">
-                              ${deal.price.toLocaleString()}
-                            </div>
-                            <div className="text-xs text-gray-500">
-                              Avg: ${deal.avg_price.toLocaleString()}
-                            </div>
-                            <div className="text-xs font-medium text-green-600">
-                              Save ${deal.savings.toLocaleString()} ({deal.savings_percent}%)
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </a>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
         </div>
 
         {/* Neighborhood Stats */}
@@ -135,9 +77,7 @@ export default function Analytics() {
             className="w-full flex items-center justify-between px-6 py-4 text-left"
           >
             <span className="text-xl font-bold text-gray-900">Neighborhood Comparison</span>
-            <span className="text-gray-500 text-sm">
-              {showNeighborhoods ? "Hide" : "Show"}
-            </span>
+            <span className="text-gray-500 text-sm">{showNeighborhoods ? "Hide" : "Show"}</span>
           </button>
 
           {showNeighborhoods && (
@@ -146,32 +86,18 @@ export default function Analytics() {
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        Location
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        Listings
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        Avg Price
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        Price Range
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        Avg Sqft
-                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Location</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Listings</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Avg Price</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price Range</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Avg Sqft</th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {data.neighborhoods.map((neighborhood) => (
                       <tr key={neighborhood.location} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                          {neighborhood.location}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-500">
-                          {neighborhood.listing_count}
-                        </td>
+                        <td className="px-6 py-4 text-sm font-medium text-gray-900">{neighborhood.location}</td>
+                        <td className="px-6 py-4 text-sm text-gray-500">{neighborhood.listing_count}</td>
                         <td className="px-6 py-4 text-sm text-gray-900">
                           $
                           {Number(neighborhood.avg_price ?? 0)
@@ -179,13 +105,10 @@ export default function Analytics() {
                             .toLocaleString()}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-500">
-                          ${neighborhood.min_price?.toLocaleString()} - $
-                          {neighborhood.max_price?.toLocaleString()}
+                          ${neighborhood.min_price?.toLocaleString()} - ${neighborhood.max_price?.toLocaleString()}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-500">
-                          {neighborhood.avg_sqft
-                            ? `${neighborhood.avg_sqft.toFixed(0)} sqft`
-                            : "N/A"}
+                          {neighborhood.avg_sqft ? `${neighborhood.avg_sqft.toFixed(0)} sqft` : "N/A"}
                         </td>
                       </tr>
                     ))}
@@ -204,9 +127,7 @@ export default function Analytics() {
             className="w-full flex items-center justify-between px-6 py-4 text-left"
           >
             <span className="text-xl font-bold text-gray-900">Price Distribution</span>
-            <span className="text-gray-500 text-sm">
-              {showPriceDistribution ? "Hide" : "Show"}
-            </span>
+            <span className="text-gray-500 text-sm">{showPriceDistribution ? "Hide" : "Show"}</span>
           </button>
 
           {showPriceDistribution && (
