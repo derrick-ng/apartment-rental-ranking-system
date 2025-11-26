@@ -31,6 +31,8 @@ class ListingViewSet(viewsets.ReadOnlyModelViewSet):
         'dogs_allowed': ['exact'],
         'laundry_type': ['exact'],
         'parking': ['exact'],
+        'latitude': ['isnull'],
+        'longitude': ['isnull']
     }
     
     ordering_fields = ['price', 'scraped_at', 'bedrooms', 'bathrooms']
