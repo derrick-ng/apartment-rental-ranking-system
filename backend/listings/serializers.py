@@ -21,6 +21,8 @@ class ListingSerializer(serializers.ModelSerializer):
             'laundry_type',
             'parking',
             'extra_amenities',
+            'latitude',
+            'longitude',
             'scraped_at',
             'active',
             'data_quality',
