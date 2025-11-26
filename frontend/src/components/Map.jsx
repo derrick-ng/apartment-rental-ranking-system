@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
 import api from "../api/client";
 import "leaflet/dist/leaflet.css";
@@ -164,35 +165,61 @@ export default function Map() {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
 
-            {filteredListings.map((listing) => {
-              if (!listing.latitude || !listing.longitude) return null;
+            <MarkerClusterGroup
+              chunkedLoading
+              iconCreateFunction={(cluster) => {
+                const count = cluster.getChildCount();
+                let size = "small";
+                let sizeClass = "w-10 h-10 text-sm";
 
-              return (
-                <Marker key={listing.id} position={[parseFloat(listing.latitude), parseFloat(listing.longitude)]}>
-                  <Popup>
-                    <div className="text-sm">
-                      <div className="font-semibold text-gray-900 mb-1">{listing.title}</div>
-                      <div className="text-lg font-bold text-blue-600 mb-1">${listing.price.toLocaleString()}</div>
-                      {listing.bedrooms && (
-                        <div className="text-gray-600 text-xs mb-1">
-                          {listing.bedrooms}BR / {listing.bathrooms}BA
-                          {listing.sqft && ` • ${listing.sqft} sqft`}
-                        </div>
-                      )}
-                      <div className="text-gray-500 text-xs mb-2">{listing.location}</div>
-                      <a
-                        href={listing.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800 text-xs font-medium"
-                      >
-                        View Listing →
-                      </a>
-                    </div>
-                  </Popup>
-                </Marker>
-              );
-            })}
+                if (count > 50) {
+                  size = "large";
+                  sizeClass = "w-14 h-14 text-base";
+                } else if (count > 10) {
+                  size = "medium";
+                  sizeClass = "w-12 h-12 text-sm";
+                }
+
+                return L.divIcon({
+                  html: `
+                    <div class="flex items-center justify-center ${sizeClass} bg-blue-600 text-white rounded-full border-4 border-white shadow-lg font-bold cursor-pointer hover:bg-blue-700 transition-colors">
+                        ${count}
+                    </div>`,
+                  className: "custom-cluster-icon",
+                  iconSize: L.point(40, 40, true),
+                });
+              }}
+            >
+              {filteredListings.map((listing) => {
+                if (!listing.latitude || !listing.longitude) return null;
+
+                return (
+                  <Marker key={listing.id} position={[parseFloat(listing.latitude), parseFloat(listing.longitude)]}>
+                    <Popup>
+                      <div className="text-sm">
+                        <div className="font-semibold text-gray-900 mb-1">{listing.title}</div>
+                        <div className="text-lg font-bold text-blue-600 mb-1">${listing.price.toLocaleString()}</div>
+                        {listing.bedrooms && (
+                          <div className="text-gray-600 text-xs mb-1">
+                            {listing.bedrooms}BR / {listing.bathrooms}BA
+                            {listing.sqft && ` • ${listing.sqft} sqft`}
+                          </div>
+                        )}
+                        <div className="text-gray-500 text-xs mb-2">{listing.location}</div>
+                        <a
+                          href={listing.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800 text-xs font-medium"
+                        >
+                          View Listing →
+                        </a>
+                      </div>
+                    </Popup>
+                  </Marker>
+                );
+              })}
+            </MarkerClusterGroup>
           </MapContainer>
         </div>
       </div>
