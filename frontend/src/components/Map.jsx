@@ -182,7 +182,7 @@ export default function Map() {
 
                 return L.divIcon({
                   html: `
-                    <div class="flex items-center justify-center ${sizeClass} bg-blue-600 text-white rounded-full border-4 border-white shadow-lg font-bold cursor-pointer hover:bg-blue-700 transition-colors">
+                    <div class="flex items-center justify-center ${sizeClass} bg-blue-600 text-white rounded-full border-3 border-white shadow-lg font-bold cursor-pointer hover:bg-blue-700 transition-colors">
                         ${count}
                     </div>`,
                   className: "custom-cluster-icon",
