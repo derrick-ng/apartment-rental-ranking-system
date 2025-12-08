@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import api from "../api/client";
 
 export default function Analytics() {
@@ -9,7 +8,6 @@ export default function Analytics() {
 
   const [showNeighborhoods, setShowNeighborhoods] = useState(false);
   const [showPriceDistribution, setShowPriceDistribution] = useState(false);
-  const [showCharts, setShowCharts] = useState(false);
 
   useEffect(() => {
     fetchAnalytics();
@@ -150,65 +148,6 @@ export default function Analytics() {
                     </div>
                   </div>
                 ))}
-              </div>
-            </div>
-          )}
-        </div>
-        <div className="bg-white rounded-lg shadow-sm mt-6">
-          <button
-            type="button"
-            onClick={() => setShowCharts((prev) => !prev)}
-            className="w-full flex items-center justify-between px-6 py-4 text-left"
-          >
-            <span className="text-xl font-bold text-gray-900">Visual Charts</span>
-            <span className="text-gray-500 text-sm">{showCharts ? "Hide" : "Show"}</span>
-          </button>
-
-          {showCharts && (
-            <div className="border-t border-gray-200 p-6 space-y-8">
-              {/* Price by Neighborhood Chart */}
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Average Price by Neighborhood</h3>
-                <ResponsiveContainer width="100%" height={400}>
-                  <BarChart data={data.neighborhoods.slice(0, 10)} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="location" angle={-45} textAnchor="end" height={100} />
-                    <YAxis label={{ value: "Price ($)", angle: -90, position: "insideLeft" }} />
-                    <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
-                    <Legend />
-                    <Bar dataKey="avg_price" fill="#3b82f6" name="Avg Price" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-
-              {/* Listing Count by Neighborhood */}
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Listing Count by Neighborhood</h3>
-                <ResponsiveContainer width="100%" height={400}>
-                  <BarChart data={data.neighborhoods.slice(0, 10)} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="location" angle={-45} textAnchor="end" height={100} />
-                    <YAxis label={{ value: "Count", angle: -90, position: "insideLeft" }} />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="listing_count" fill="#10b981" name="Listings" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-
-              {/* Price Distribution Chart */}
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Price Distribution</h3>
-                <ResponsiveContainer width="100%" height={400}>
-                  <BarChart data={data.price_distribution} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="range" angle={-45} textAnchor="end" height={80} />
-                    <YAxis label={{ value: "Count", angle: -90, position: "insideLeft" }} />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="count" fill="#8b5cf6" name="Listings" />
-                  </BarChart>
-                </ResponsiveContainer>
               </div>
             </div>
           )}
