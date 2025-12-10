@@ -1,8 +1,7 @@
-from django.db.models import Avg
 from .models import Listing
 from .analytics import get_neighborhood_stats
 
-def get_overall_best_value_ai():
+def get_overall_best_value():
     """
     ai weights
     - Price per sqft (30%)
@@ -118,7 +117,7 @@ def get_overall_best_value_ai():
         score += quality_score
         
     
-        if score >= 40:
+        if score >= 50:
             scored_listings.append({
                 'id': listing.id,
                 'title': listing.title,

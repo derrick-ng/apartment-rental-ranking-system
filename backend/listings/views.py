@@ -12,7 +12,7 @@ from .analytics import (
 from .algorithms import (
     get_good_deals,
     get_best_price_per_sqft,
-    get_overall_best_value_ai,
+    get_overall_best_value,
     )
 
 # gets data from database, converts to JSON format
@@ -46,5 +46,5 @@ class ListingViewSet(viewsets.ReadOnlyModelViewSet):
             'price_distribution': get_price_distribution(),
             'good_deals': get_good_deals(),
             'best_price_per_sqft': get_best_price_per_sqft(),
-            'overall_best_value_ai': get_overall_best_value_ai(),
+            'overall_best_value': get_overall_best_value(),
         })

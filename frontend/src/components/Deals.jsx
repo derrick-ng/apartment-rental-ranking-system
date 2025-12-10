@@ -6,7 +6,7 @@ export default function Deals() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [showOverallBestValueAI, setShowOverallBestValueAI] = useState(false);
+  const [showOverallBestValue, setShowOverallBestValue] = useState(false);
   const [showBelowMarket, setShowBelowMarket] = useState(false);
   const [showBestPricePerSqft, setShowBestPricePerSqft] = useState(false);
 
@@ -47,24 +47,24 @@ export default function Deals() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Best Deals</h1>
 
-        {/* Overall Best Value (AI Weighted)*/}
+        {/* Overall Best Value*/}
         <div className="bg-white rounded-lg shadow-sm mb-6">
           <button
             type="button"
-            onClick={() => setShowOverallBestValueAI((prev) => !prev)}
+            onClick={() => setShowOverallBestValue((prev) => !prev)}
             className="w-full flex items-center justify-between px-6 py-4 text-left"
           >
-            <span className="text-xl font-bold text-gray-900">Overall Best Value (AI Algorithm)</span>
-            <span className="text-gray-500 text-sm">{showOverallBestValueAI ? "Hide" : "Show"}</span>
+            <span className="text-xl font-bold text-gray-900">Overall Best Value</span>
+            <span className="text-gray-500 text-sm">{showOverallBestValue ? "Hide" : "Show"}</span>
           </button>
 
-          {showOverallBestValueAI && (
+          {showOverallBestValue && (
             <div className="border-t border-gray-200 p-6">
-              {data.overall_best_value_ai?.length === 0 ? (
+              {data.overall_best_value?.length === 0 ? (
                 <p className="text-gray-500">No listings meet the criteria yet.</p>
               ) : (
                 <div className="space-y-3">
-                  {data.overall_best_value_ai?.map((deal, index) => (
+                  {data.overall_best_value?.map((deal, index) => (
                     <a key={deal.id} href={deal.url} target="_blank" rel="noreferrer">
                       <div className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
                         <div className="flex justify-between items-start">
@@ -79,7 +79,7 @@ export default function Deals() {
                             <div className="flex gap-4 text-xs text-gray-600 mt-2">
                               <span>${deal.details.price_per_sqft}/sqft</span>
                               <span>${deal.details.price_per_bedroom}/BR</span>
-                              {deal.details.percent_of_avg && <span>{deal.details.percent_of_avg}% of avg</span>}
+                              {deal.details.percent_of_avg && <span>{100 - deal.details.percent_of_avg}% below neighborhood avg</span>}
                             </div>
                             {(deal.parking || deal.laundry_type) && (
                               <div className="flex gap-3 text-xs text-gray-500 mt-1">
