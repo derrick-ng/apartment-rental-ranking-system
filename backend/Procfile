@@ -1,0 +1,3 @@
+web: gunicorn rental_intel.wsgi --log-file -
+worker: celery -A rental_intel worker -l info
+beat: celery -A rental_intel beat -l info
