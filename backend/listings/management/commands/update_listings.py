@@ -30,7 +30,7 @@ class Command(BaseCommand):
                     listing.active = False
                     listing.save()
                     new_inactive += 1
-                    time.sleep(random.uniform(1, 2))
+                    time.sleep(random.uniform(1.5, 3))
                     continue
                 
                 changes_detected = False
@@ -50,7 +50,7 @@ class Command(BaseCommand):
                 else:
                     unchanged += 1
 
-                time.sleep(random.uniform(1, 2))
+                time.sleep(random.uniform(1.5, 3))
                 
             except Exception as e:
                 self.stdout.write(self.style.ERROR(f"Error checking: {e}"))
