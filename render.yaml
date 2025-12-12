@@ -79,5 +79,7 @@ databases:
     databaseName: rental_intel
     user: rental_intel
 
+redis:
   - name: rental-intel-redis
     plan: free
+    region: oregon
