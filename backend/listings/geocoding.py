@@ -2,6 +2,7 @@ import requests, os
 from pathlib import Path
 from dotenv import load_dotenv
 from time import sleep
+import re
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -13,6 +14,9 @@ def geocode_address(address):
     if not address or not TOMTOM_API_KEY:
         return None
     
+    address = re.sub(r'(?i)(?:apt|unit|ste|suite)\s*#?\s*\w+', '', address)
+    address = re.sub(r'#\s*\w+', '', address).strip()
+
     url = f'https://api.tomtom.com/search/2/geocode/{address}.json?key={TOMTOM_API_KEY}'
 
     try:
