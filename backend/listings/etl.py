@@ -9,7 +9,7 @@ def clean_listings_data(listings_data):
     df['location'] = df['location'].apply(standardize_location)
 
     #remove outlier prices
-    df = df[(df['price'] >= 500) & df['price'] <= 10000]
+    df = df[(df['price'] >= 500) & (df['price'] <= 10000)]
 
     df['title'] = df['title'].str.strip()
     df['title'] = df['title'].str.replace(r'\s+', ' ', regex=True)
