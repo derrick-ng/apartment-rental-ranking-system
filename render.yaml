@@ -72,14 +72,14 @@ services:
           type: redis
           name: rental-intel-redis
           property: connectionString
+  
+  - type: redis
+    name: rental-intel-redis
+    plan: free
+    region: oregon
 
 databases:
   - name: rental-intel-db
     plan: free
     databaseName: rental_intel
     user: rental_intel
-
-redis:
-  - name: rental-intel-redis
-    plan: free
-    region: oregon
