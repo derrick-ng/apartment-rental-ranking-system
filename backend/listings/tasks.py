@@ -4,9 +4,14 @@ from .scraper import scrape_list_urls
 from .models import Listing
 from .etl import clean_listings_data
 from .geocoding import geocode_address
+import time, random
 
 @shared_task
 def scrape_listings_task():
+    # don't wanna visit site same time everyday
+    # delay scrape by 2 to 30 mins
+    time.sleep(random.uniform(120, 1800))
+
     listings_data = scrape_list_urls()
 
     cleaned_data = clean_listings_data(listings_data)
