@@ -28,6 +28,7 @@ docopt==0.6.2
 executing==2.2.1
 fastjsonschema==2.21.2
 gunicorn==23.0.0
+honcho==2.0.0
 idna==3.11
 ipython==8.12.3
 jedi==0.19.2

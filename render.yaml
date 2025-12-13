@@ -1,5 +1,5 @@
 services:
-  # Django Web Service
+  # Combined Django + Celery Service
   - type: web
     name: rental-intel-backend
     env: python
@@ -7,7 +7,8 @@ services:
     plan: free
     branch: main
     buildCommand: "cd backend && pip install -r requirements.txt && python manage.py collectstatic --no-input && python manage.py migrate"
-    startCommand: "cd backend && gunicorn rental_intel.wsgi:application"
+    # This runs multiple processes in one container using Honcho
+    startCommand: "cd backend && honcho start"
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
@@ -30,48 +31,6 @@ services:
         sync: false
       - key: TOMTOM_API_KEY
         sync: false
-
-  # Celery Worker
-  - type: worker
-    name: rental-intel-worker
-    env: python
-    region: oregon
-    plan: free
-    branch: main
-    buildCommand: "cd backend && pip install -r requirements.txt"
-    startCommand: "cd backend && celery -A rental_intel worker -l info"
-    envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: rental-intel-db
-          property: connectionString
-      - key: REDIS_URL
-        fromService:
-          type: redis
-          name: rental-intel-redis
-          property: connectionString
-      - key: DJANGO_SECRET_KEY
-        sync: false
-
-  # Celery Beat (Scheduler)
-  - type: worker
-    name: rental-intel-beat
-    env: python
-    region: oregon
-    plan: free
-    branch: main
-    buildCommand: "cd backend && pip install -r requirements.txt"
-    startCommand: "cd backend && celery -A rental_intel beat -l info"
-    envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: rental-intel-db
-          property: connectionString
-      - key: REDIS_URL
-        fromService:
-          type: redis
-          name: rental-intel-redis
-          property: connectionString
   
   - type: redis
     name: rental-intel-redis
