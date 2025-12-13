@@ -52,11 +52,11 @@ def scrape_list_urls():
             if not details or all(v is None or v is False for v in details.values()):
                 logging.warning(f"Listing removed/flagged")
                 removed_count += 1
-                time.sleep(random.uniform(1.5, 3))
+                time.sleep(random.uniform(3, 5))
                 continue
             
             data.update(details)
-            time.sleep(random.uniform(1.5, 3))
+            time.sleep(random.uniform(3, 5))
 
         all_listings.append(data)
 
