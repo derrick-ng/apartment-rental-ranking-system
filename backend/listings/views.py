@@ -48,3 +48,28 @@ class ListingViewSet(viewsets.ReadOnlyModelViewSet):
             'best_price_per_sqft': get_best_price_per_sqft(),
             'overall_best_value': get_overall_best_value(),
         })
+    
+    @action(detail=False, methods=['post'])
+    def bulk_create_listings(self, request):
+        try:
+            listings_data = request.data
+            
+            created = []
+            for item in listings_data:
+                listing, was_created = Listing.objects.get_or_create(
+                    craigslist_id=item['craigslist_id'],
+                    defaults=item
+                )
+                if was_created:
+                    created.append(listing.craigslist_id)
+            
+            return Response({
+                'status': 'Success',
+                'created': len(created),
+                'ids': created,
+            })
+        except Exception as e:
+            return Response({
+                'status': 'Error',
+                'message': str(e)
+            }, status=400)
