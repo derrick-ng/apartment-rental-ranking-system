@@ -1,4 +1,4 @@
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, filters, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
@@ -54,22 +54,47 @@ class ListingViewSet(viewsets.ReadOnlyModelViewSet):
         try:
             listings_data = request.data
             
-            created = []
+            created_count = 0
+            updated_count = 0
+
             for item in listings_data:
-                listing, was_created = Listing.objects.get_or_create(
+                item.pop('id', None)
+
+                listing, was_created = Listing.objects.update_or_create(
                     craigslist_id=item['craigslist_id'],
                     defaults=item
                 )
                 if was_created:
-                    created.append(listing.craigslist_id)
+                    created_count += 1
+                else:
+                    updated_count += 1
             
             return Response({
                 'status': 'Success',
-                'created': len(created),
-                'ids': created,
+                'created': created_count,
+                'updated': updated_count,
             })
         except Exception as e:
             return Response({
                 'status': 'Error',
                 'message': str(e)
-            }, status=400)
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+    @action(detail=False, methods=['post'])
+    def mark_inactive(self, request):
+        try:
+            craigslist_ids = request.data.get('craigslist_ids', [])
+
+            updated = Listing.objects.filter(
+                craigslist_id__in=craigslist_ids
+            ).update(active=False)
+
+            return Response({
+                'status': 'success',
+                'marked_inactive': updated
+            })
+        except Exception as e:
+            return Response({
+                'status': 'error',
+                'message': str(e)
+            }, status=status.HTTP_400_BAD_REQUEST)

@@ -10,7 +10,7 @@ import time, random
 def scrape_listings_task():
     # don't wanna visit site same time everyday
     # delay scrape by 2 to 30 mins
-    time.sleep(random.uniform(120, 1800))
+    # time.sleep(random.uniform(120, 1800))
 
     listings_data = scrape_list_urls()
 
