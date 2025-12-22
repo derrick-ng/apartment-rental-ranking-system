@@ -3,6 +3,7 @@ from listings.models import Listing
 from listings.scraper import scrape_list_urls
 from listings.etl import clean_listings_data
 from listings.geocoding import geocode_address
+from listings.serializers import ListingSerializer
 import time, requests, os
 
 class Command(BaseCommand):
@@ -62,7 +63,9 @@ class Command(BaseCommand):
 
         try:
             listings = Listing.objects.filter(active=True)
-            data = list(listings.values())
+
+            serializer = ListingSerializer(listings, many=True)
+            data = serializer.data
 
             self.stdout.write(f"\nSyncing {len(data)} listings to production...")
 

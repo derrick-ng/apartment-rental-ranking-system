@@ -18,7 +18,7 @@ def scrape_list_urls():
     listings = soup.find_all('li', class_='cl-static-search-result')
     logging.info(f"Found {len(listings)} Listings")
 
-    for index, listing in enumerate(listings):
+    for index, listing in enumerate(listings, 1):
         link = listing.find('a')
         url = link['href'] if link else None
 
@@ -46,7 +46,8 @@ def scrape_list_urls():
         }
 
         if url:
-            logging.info(f"[{index+1}/{len(listings)}] url:{url}")
+            print(f"[{index}/{len(listings)}] url:{url}")
+            # logging.info(f"[{index}/{len(listings)}] url:{url}")
             details = scrape_listing_details(url)
 
             if not details or all(v is None or v is False for v in details.values()):
