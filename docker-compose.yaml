@@ -23,4 +23,6 @@ services:
 
 volumes:
   postgres-data:
+    external: true
+    name: apartment-rental-ranking-system_postgres-data
   redis-data:
