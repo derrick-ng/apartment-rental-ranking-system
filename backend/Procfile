@@ -1,3 +1,0 @@
-web: gunicorn rental_intel.wsgi:application
-worker: celery -A rental_intel worker -l info --concurrency=2
-beat: celery -A rental_intel beat -l info
