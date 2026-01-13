@@ -31,6 +31,9 @@ function App() {
 
   return (
     <div>
+      <div className="text-center">
+        <p>Showing sample data while backend is being transferred to a new host</p>
+      </div>
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-8 h-16">
