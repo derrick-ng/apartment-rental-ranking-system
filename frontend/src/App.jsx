@@ -33,6 +33,7 @@ function App() {
     <div>
       <div className="text-center">
         <p>Showing sample data while backend is being transferred to a new host</p>
+        <p>Some features are disabled until new host is configured (Filters, Best Deals, some Charts)</p>
       </div>
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
