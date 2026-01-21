@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres
+    image: postgres:17
     container_name: "rental-db"
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -12,17 +12,23 @@ services:
       - postgres-data:/var/lib/postgresql/data
     env_file:
       - ./backend/.env
+    restart: unless-stopped
 
-  redis:
-    image: redis:7-alpine
-    container_name: "rental-redis"
-    ports:
-      - "6379:6379"
+  web:
+    build: ./backend
+    container_name: "rental-web"
+    command: gunicorn rental_intel.wsgi:application --bind 0.0.0.0:8000
     volumes:
-      - redis-data:/data
+      - ./backend:/app
+      - static-volume:/app/staticfiles
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - db
+    restart: unless-stopped
 
 volumes:
   postgres-data:
-    external: true
-    name: apartment-rental-ranking-system_postgres-data
-  redis-data:
+  static-volume:
