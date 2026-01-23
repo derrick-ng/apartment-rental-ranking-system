@@ -199,7 +199,7 @@ export default function Map() {
                       <div className="text-sm">
                         <div className="font-semibold text-gray-900 mb-1">{listing.title}</div>
                         <div className="text-lg font-bold text-blue-600 mb-1">${listing.price.toLocaleString()}</div>
-                        {listing.bedrooms && (
+                        {listing.bedrooms != null && (
                           <div className="text-gray-600 text-xs mb-1">
                             {listing.bedrooms}BR / {listing.bathrooms}BA
                             {listing.sqft && ` • ${listing.sqft} sqft`}
