@@ -270,7 +270,13 @@ function ListingTable() {
                         )}
                       </td>
                       <td className="px-6 py-4 text-sm">
-                        <a href={listing.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 font-medium">
+                        <a
+                          href={listing.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800 font-medium"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           View →
                         </a>
                       </td>
