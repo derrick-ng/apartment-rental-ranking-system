@@ -250,7 +250,7 @@ function ListingTable() {
               <tbody className="bg-white divide-y divide-gray-200">
                 {listings.map((listing) => (
                   <>
-                    <tr key={listing.id} className="hover:bg-gray-50 transition-colors">
+                    <tr key={listing.id} className="hover:bg-gray-50 transition-colors" onClick={() => toggleExpand(listing.id)}>
                       <td className="px-6 py-4 text-sm text-gray-900">{listing.title}</td>
                       <td className="px-6 py-4 text-sm text-gray-900 font-medium">${listing.price?.toLocaleString()}</td>
                       <td className="px-6 py-4 text-sm text-gray-500">{listing.location}</td>
@@ -261,10 +261,7 @@ function ListingTable() {
                               {listing.bedrooms}BR / {listing.bathrooms}BA
                               {listing.sqft && ` • ${listing.sqft}sqft`}
                             </span>
-                            <button
-                              onClick={() => toggleExpand(listing.id)}
-                              className="text-blue-600 hover:text-blue-800 font-bold text-lg leading-none shrink-0"
-                            >
+                            <button className="text-blue-600 hover:text-blue-800 font-bold text-lg leading-none shrink-0">
                               {expandedId === listing.id ? "▼" : "▶"}
                             </button>
                           </div>
