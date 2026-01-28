@@ -12,11 +12,11 @@ def scrape_list_urls():
     }
 
     response = requests.get(url, headers=headers)
-    logging.info(f"Status Code: {response.status_code}")
+    print(f"Status Code: {response.status_code}")
 
     soup = BeautifulSoup(response.content, 'lxml')
     listings = soup.find_all('li', class_='cl-static-search-result')
-    logging.info(f"Found {len(listings)} Listings")
+    print(f"Found {len(listings)} Listings")
 
     for index, listing in enumerate(listings, 1):
         link = listing.find('a')
@@ -47,11 +47,10 @@ def scrape_list_urls():
 
         if url:
             print(f"[{index}/{len(listings)}] url:{url}")
-            # logging.info(f"[{index}/{len(listings)}] url:{url}")
             details = scrape_listing_details(url)
 
             if not details or all(v is None or v is False for v in details.values()):
-                logging.warning(f"Listing removed/flagged")
+                print(f"Listing removed/flagged")
                 removed_count += 1
                 time.sleep(random.uniform(3, 5))
                 continue
